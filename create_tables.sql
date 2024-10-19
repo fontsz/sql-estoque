@@ -2,9 +2,9 @@
 
 CREATE TABLE IF NOT EXISTS fornecedor (
 	PRIMARY KEY (forn_cnpj),
-	forn_cnpj INT(14) NOT NULL AUTO_INCREMENT,
+	forn_cnpj BIGINT NOT NULL,
     forn_nome VARCHAR(100),
-    forn_tel INT(20),
+    forn_tel BIGINT,
     forn_email VARCHAR(100)
 );
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS pedido (
 	PRIMARY KEY (pedido_id),
     pedido_id INT NOT NULL AUTO_INCREMENT,
     pedido_data DATE,
-    forn_cnpj INT(14),
+    forn_cnpj BIGINT NOT NULL,
     FOREIGN KEY (forn_cnpj) REFERENCES fornecedor(forn_cnpj),
     nf_num INT NOT NULL,
     FOREIGN KEY (nf_num) REFERENCES notafiscal(nf_num),
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS produto (
 	PRIMARY KEY (produto_id),
 	produto_id INT NOT NULL AUTO_INCREMENT,
     produto_quantidade INT NOT NULL DEFAULT 0,
-    forn_cnpj INT(14),
+    forn_cnpj BIGINT NOT NULL,
     FOREIGN KEY (forn_cnpj) REFERENCES fornecedor(forn_cnpj),
     setor_id INT,
     FOREIGN KEY (setor_id) REFERENCES setor(setor_id)
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS retorno (
     FOREIGN KEY (pedido_id) REFERENCES pedido(pedido_id),
     nf_num INT NOT NULL,
     FOREIGN KEY (nf_num) REFERENCES notafiscal(nf_num),
-    forn_cnpj INT(14) NOT NULL,
+    forn_cnpj BIGINT NOT NULL,
     FOREIGN KEY (forn_cnpj) REFERENCES fornecedor(forn_cnpj),
     func_id INT NOT NULL,
     FOREIGN KEY (func_id) REFERENCES funcionario(func_id)
