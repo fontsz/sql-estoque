@@ -91,7 +91,8 @@ CREATE TABLE IF NOT EXISTS item_pedido (
 	produto_id INT NOT NULL,
     FOREIGN KEY (produto_id) REFERENCES produto(produto_id),
     pedido_id INT NOT NULL,
-    FOREIGN KEY (pedido_id) REFERENCES pedido(pedido_id)
+    FOREIGN KEY (pedido_id) REFERENCES pedido(pedido_id),
+    quantidade INT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS item_venda (
