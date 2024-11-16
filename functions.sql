@@ -1,27 +1,36 @@
 DELIMITER //
 
-CREATE FUNCTION QuantidadeProdutoEspecifico(
-    p_produto_id INT
-) RETURNS INT
+CREATE FUNCTION fn_get_estoque_atual(p_produto_id INT) 
+RETURNS INT
 DETERMINISTIC
 BEGIN
-    DECLARE quantidade INT;
-    SELECT produto_quantidade INTO quantidade
+    DECLARE estoque_atual INT;
+
+    SELECT produto_quantidade
+    INTO estoque_atual
     FROM produto
-    WHERE produto_id = p_produto_id;
-    RETURN quantidade;
+    WHERE produto_id = p_produto_id
+    FOR UPDATE; -- Para garantir consistência
+
+    RETURN IFNULL(estoque_atual, 0);
 END //
 
-CREATE FUNCTION QuantidadeItensEntreguePorFornecedor(
-    p_fornecedor_cnpj BIGINT
-) RETURNS INT
+DELIMITER //
+
+CREATE FUNCTION fn_calcular_total_pedido(p_pedido_id INT) 
+RETURNS DECIMAL(10, 2)
 DETERMINISTIC
 BEGIN
-    DECLARE total_itens INT;
-    SELECT SUM(produto_quantidade) INTO total_itens
-    FROM produto
-    WHERE forn_cnpj = p_fornecedor_cnpj;
-    RETURN total_itens;
+    DECLARE total_pedido DECIMAL(10, 2);
+
+	-- Calcula o preço total do pedido
+    SELECT SUM(quantidade * preco_unitario)
+    INTO total_pedido
+    FROM item_pedido
+    WHERE pedido_id = p_pedido_id;
+
+    RETURN IFNULL(total_pedido, 0.00);
 END //
 
 DELIMITER ;
+
